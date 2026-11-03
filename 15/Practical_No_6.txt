@@ -1,0 +1,93 @@
+# ============================================================
+# OBJECT DETECTION USING TRANSFER LEARNING
+# Bird, Cat and Dog Detection
+# ============================================================
+
+from ultralytics import YOLO
+import matplotlib.pyplot as plt
+import cv2
+
+
+# ------------------------------------------------------------
+# 1. Load Pre-trained YOLO Model
+# ------------------------------------------------------------
+
+model = YOLO("yolo11n.pt")
+
+
+# ------------------------------------------------------------
+# 2. Train / Fine-Tune Model
+# ------------------------------------------------------------
+
+results = model.train(
+    data=r"C:\Users\Lenovo\Desktop\DL Codes\archive\data.yaml",
+    epochs=10,
+    imgsz=640,
+    batch=8,
+    name="bird_cat_dog_detection"
+)
+
+
+# ------------------------------------------------------------
+# 3. Validate Model
+# ------------------------------------------------------------
+
+metrics = model.val()
+
+print("\nValidation completed")
+
+
+# ------------------------------------------------------------
+# 4. Load Test Image
+# ------------------------------------------------------------
+
+image_path = r"C:\Users\Lenovo\Desktop\DL Codes\archive\test\images\Deva.jpg"
+
+
+# ------------------------------------------------------------
+# 5. Perform Object Detection
+# ------------------------------------------------------------
+
+results = model.predict(
+    source=image_path,
+    conf=0.25
+)
+
+
+# ------------------------------------------------------------
+# 6. Display Detection Result
+# ------------------------------------------------------------
+
+for result in results:
+
+    annotated_image = result.plot()
+
+    annotated_image = cv2.cvtColor(
+        annotated_image,
+        cv2.COLOR_BGR2RGB
+    )
+
+    plt.figure(figsize=(10, 8))
+
+    plt.imshow(annotated_image)
+
+    plt.axis("off")
+
+    plt.title("Bird, Cat and Dog Object Detection")
+
+    plt.show()
+
+#For yaml file 
+# path: C:/Users/Lenovo/Desktop/DL Codes/archive
+
+# train: train/images
+# val: valid/images
+# test: test/images
+
+# nc: 2
+
+# names:
+#   0: cats
+#   1: dogs
+
+#https://www.kaggle.com/datasets/hemanthganeshvilluri/cats-dogs-yolo
